@@ -9,6 +9,7 @@
 [![PostgreSQL](https://img.shields.io/badge/postgresql-blue?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![GitHub](https://img.shields.io/badge/github-373747?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oslabs-beta/Morpheus)
 [![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
+[![ShadCN](https://img.shields.io/badge/-shadCN-%233b82f6?style=for-the-badge&logo=shadcn&logoColor=white)](https://shadcn.dev/)
 
 ---
 

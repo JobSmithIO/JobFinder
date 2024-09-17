@@ -21,6 +21,7 @@ export default [
         sourceType: 'module',
       },
     },
+    env: { browser: true, node: true, },
     settings: { react: { version: '18.3' } },
     plugins: {
       react,
@@ -28,6 +29,7 @@ export default [
       'react-refresh': reactRefresh,
     },
     rules: {
+      'no-process-env': 'off',
       ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
