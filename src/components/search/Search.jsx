@@ -12,11 +12,16 @@ const jobTitles = [
   'Staff Software Engineer'
 ];
 
+
+  
 const Card = ({ children }) => (
   <div className={styles.card}>
     {children}
   </div>
 );
+
+
+
 
 const Dropdown = ({ label, options, onSelect }) => (
   <div className={styles.dropdownContainer}>
@@ -47,12 +52,21 @@ const SelectedItems = ({ items, onRemove }) => (
   </div>
 );
 
+
+
 export default function JobSearchForm() {
   const [selectedJobTitles, setSelectedJobTitles] = useState([]);
   const [selectedWebsites, setSelectedWebsites] = useState([]);
   const [dateFilterUnit, setDateFilterUnit] = useState('days');
   const [dateFilterValue, setDateFilterValue] = useState('7');
+  
   const [location, setLocation] = useState('');
+  const handleSiteChange = (e) => {
+    const { value, checked } = e.target;
+    setSelectedSites((prev) =>
+      checked ? [...prev, value] : prev.filter((site) => site !== value)
+    );
+  };
 
   const handleJobTitleSelect = (title) => {
     if (title && !selectedJobTitles.includes(title)) {
@@ -85,7 +99,6 @@ export default function JobSearchForm() {
       dateRestrict,
     };
     console.log('Form Data:', formData);
-    // Handle form submission
   };
 
   return (
