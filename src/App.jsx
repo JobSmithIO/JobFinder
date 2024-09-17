@@ -1,19 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Form from './components/Landing/Form'
-// import Form2 from './components/Landing/Form2'
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import SideBar from './components/SideBar';
+import SignUp from './components/Signup';
+import LogIn from './components/Login';
+import LandingPage from './components/Landing';
+import AboutPage from './components/About';
+import AboutPageDash from './components/AboutDashboard';
+import Dashbaord from './components/Dashboard';
+import FavoritesPage from './components/Favorites';
 function App() {
-  const [count, setCount] = useState(0)
+ 
 
   return (
-    <div>
-    <Form />
-    {/* <Form2 /> */}
-  </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/SideBar" element={<SideBar />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/dashboard" element={<Dashbaord />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/about-dashboard" element={<AboutPageDash />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
