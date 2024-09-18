@@ -75,7 +75,7 @@ app.post('/api/login', async (req, res) => {
     const token = jwt.sign(
       { id: user.id, username: user.username },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '100y' }
     );
     res.json({ token, user: { id: user.id, username: user.username } });
   } catch (error) {
@@ -120,6 +120,21 @@ app.delete('/api/favorites/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.post('/api/favorites', authenticateToken, async (req, res) => {
+  const { jobTitle, link, status } = req.body;
+  const userId = req.user.id;
+  try {
+    const result = await pool.query(
+      'INSERT INTO favorites (user_id, job_title, link, status) VALUES ($1, $2, $3, $4) RETURNING *',
+      [userId, jobTitle, link, status]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to save favorite' });
   }
 });
 

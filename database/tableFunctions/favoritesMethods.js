@@ -1,24 +1,25 @@
-// Co-authored by Brian N. & Erin L.
-import dotenv from 'dotenv';
+import axios from 'axios';
 
-const API_URL = '/api'; // Adjust this to match your server's API endpoint
+const API_URL = '/api'; // This should match the prefix used in your server routes
 
 export class favoritesMethods {
-  static async createFave(userId, jobTitle, link, status = null) {
+  static async createFave(jobTitle, link, status = null) {
     try {
-      const response = await fetch(`${API_URL}/favorites`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, jobTitle, link, status }),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create favorite');
-      }
-      return await response.json();
-    } catch (err) {
-      console.error('Error in createFave:', err);
-      throw err;
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${API_URL}/favorites`,
+        { jobTitle, link, status },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error in createFave:', error);
+      throw error.response ? error.response.data : error;
     }
   }
 

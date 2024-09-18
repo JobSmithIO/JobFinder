@@ -20,3 +20,26 @@ export const loginUser = async (username, password) => {
     throw error.response.data;
   }
 };
+
+export const createFave = async (jobTitle, link, status = null) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.post(
+      '/api/favorites',
+      {
+        jobTitle,
+        link,
+        status,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error creating favorite:', error);
+    throw error.response ? error.response.data : error;
+  }
+};
