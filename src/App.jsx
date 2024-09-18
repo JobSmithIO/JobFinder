@@ -7,7 +7,7 @@ import AboutPage from './components/About';
 import AboutPageDash from './components/AboutDashboard';
 import Dashbaord from './components/Dashboard';
 import FavoritesPage from './components/Favorites';
-import Search from './components/search/Search.jsx';
+import JobResults from './components/JobResults';
 function App() {
  
 
@@ -22,7 +22,7 @@ function App() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/about-dashboard" element={<AboutPageDash />} />
-        <Route path = "/search" element = {<Search/>} />
+        <Route path="/jobs" element={<JobResults />} />
       </Routes>
     </BrowserRouter>
   );
