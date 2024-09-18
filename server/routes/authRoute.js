@@ -14,19 +14,20 @@ router.get(
 );
 
 router.get(
-  "/oauth",
-  passport.authenticate("google", {
-    failureRedirect:
-      "http://localhost:3000",
-    session: false,
-  }),
-  (req, res) => {
-    const { token, user } = req.user;
-    console.log("hit :", token)
-    res.redirect(
-      `http://localhost:3000/dashboard?token=${token}`
-    );
-  }
-);
+    "/oauth",
+    passport.authenticate("google", {
+      failureRedirect: "http://localhost:3000",
+      session: false,
+    }),
+    (req, res) => {
+      const { token, user } = req.user;
+      if (token && user) {
+        res.redirect(`http://localhost:3000/dashboard?token=${token}`);
+      } else {
+        res.redirect("http://localhost:3000");
+      }
+    }
+  );
+  
 
 export default router;

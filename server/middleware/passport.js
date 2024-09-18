@@ -19,7 +19,6 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/api/google/oauth",
     },
-  
     async (accessToken, refreshToken, profile, done) => {
       const email = profile.emails?.[0].value || "";
 
@@ -29,25 +28,23 @@ passport.use(
           [email]
         );
 
-       
         let user;
         if (userQuery.rows.length === 0) {
-         
-          const result = await pool.query(
+          const newUser = await pool.query(
             'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username',
             [email, email]
           );
-            console.log(newUser) 
           user = newUser.rows[0];
         } else {
           user = userQuery.rows[0];
         }
-        console.log(user)
+
         const token = jwt.sign(
-          { id: email, username: email },
+          { id: user.id, username: email },
           process.env.JWT_SECRET,
           { expiresIn: "1h" }
         );
+        
         return done(null, { user, token });
       } catch (err) {
         return done(err, null);

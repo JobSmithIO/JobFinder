@@ -6,12 +6,12 @@ export default function Dashboard() {
 let navigate = useNavigate();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
+    const token =  urlParams.get("token");
     if (token) {
       localStorage.setItem("token", token);
       navigate("/dashboard");
     }
-})
+}, [])
   return (
 
     <div className="flex bg-gray-100">
