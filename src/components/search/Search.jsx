@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import styles from './form.module.css'; 
 import { useNavigate } from 'react-router';
+import axios from 'axios';
+
 const companies = ['Greenhouse', 'Lever.co', 'Y-combinator', 'Well Found', 'AngelList'];
 const jobTitles = [
   'Software Engineer',
@@ -89,7 +91,7 @@ export default function JobSearchForm() {
     setSelectedWebsites(selectedWebsites.filter(w => w !== website));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const dateRestrict = `${dateFilterUnit.charAt(0)}${dateFilterValue}`;
     const formData = {
@@ -100,9 +102,17 @@ export default function JobSearchForm() {
       dateRestrict,
     
     };
-    navigate('/jobs')
+
+    try {
+      const response = await axios.post('/api/search-jobs', formData);
+      console.log(response)
+        navigate('/jobs', { state: { jobResults: response.data } });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
     console.log('Form Data:', formData);
   };
+
 
   return (
     <Card>
