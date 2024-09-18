@@ -1,14 +1,14 @@
 const { Pool } = require('pg');
-
-const PG_URI = 'postgresql://postgres.sbmegajdtzoorqimbvmk:nuLSvTmYZaGzdPz5@aws-0-us-east-1.pooler.supabase.com:6543/postgres';
-
+const URI = 'postgresql://postgres.sbmegajdtzoorqimbvmk:nuLSvTmYZaGzdPz5@aws-0-us-east-1.pooler.supabase.com:6543/postgres';
 const pool = new Pool({
-    connectionString: PG_URI;
+    connectionString: URI,
 });
-
-module.exports = {
-    query: (test, params, callback) => {
-        console.log('executed query');
-        return pool.query(test, params, callback);
+const checkDatabaseConnection = async () => {
+    try {
+        await pool.query('SELECT NOW()');
+        console.log('Connected to the PostgreSQL database.');
+    } catch (err) {
+        console.error('Failed to connect to the PostgreSQL database:', err);
     }
-}
+  };
+export {pool, checkDatabaseConnection};
