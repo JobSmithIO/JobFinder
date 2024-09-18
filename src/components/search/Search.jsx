@@ -3,7 +3,7 @@ import styles from './form.module.css';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 
-const companies = ['Greenhouse', 'Lever.co', 'Y-combinator', 'Well Found', 'AngelList'];
+const companies = ['Greenhouse', 'Lever.co', 'Y-combinator', 'Well Found', 'AngelList', 'Workable', 'Smart-Recruiters'];
 const jobTitles = [
   'Software Engineer',
   'Front-end Engineer',

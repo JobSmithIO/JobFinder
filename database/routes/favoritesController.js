@@ -64,7 +64,7 @@ router.patch('/updateFavorites', async (req, res, next) => {
 //deleteFave
 router.delete('/deleteFavorites', async (req, res, next) => {
   try {
-    const deletedFaves = await deleteFave(req.body);
+    const deletedFaves = await deleteFave(req.params.id);
     res.json(deletedFaves);
   } catch {
     console.error('Error in /db/deleteFavorites');
