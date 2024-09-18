@@ -21,9 +21,19 @@
 </p>
 
 ---
+Search for Jobs
+---
+<img src="./public/jobsmith1.gif" alt="JobSmith Demo1" width="600"/>
 
-</br>
 
+---
+Favorite Jobs
+---
+
+<img src="./public/jobsmith2.gif" alt="JobSmith Demo1" width="600"/>
+
+
+---
 ## Project Setup
 
 This project requires several environment variables to be configured for proper functionality. Below is a guide to setting up the `.env` file with the necessary parameters.
