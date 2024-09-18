@@ -7,6 +7,7 @@ import searchJobsRouter from './routes/search-jobs.js';
 import favoritesRouter from '../database/routes/favoritesController.js';
 import bcrypt from 'bcrypt';
 import pkg from 'pg';
+import jwt from 'jsonwebtoken';
 
 const { Pool } = pkg;
 
@@ -29,6 +30,19 @@ const pool = new Pool({
 
 app.use('/api', searchJobsRouter);
 app.use('/db', favoritesRouter);
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
 
 app.post('/api/users', async (req, res) => {
   try {
@@ -58,9 +72,54 @@ app.post('/api/login', async (req, res) => {
     if (!isValid) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-    res.json({ id: user.id, username: user.username });
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    res.json({ token, user: { id: user.id, username: user.username } });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+
+app.get('/api/favorites', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const result = await pool.query(
+      'SELECT * FROM favorites WHERE user_id = $1',
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.put('/api/favorites/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const result = await pool.query(
+      'UPDATE favorites SET status = $1 WHERE id = $2 RETURNING *',
+      [status, id]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.delete('/api/favorites/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM favorites WHERE id = $1', [id]);
+    res.json({ message: 'Favorite deleted' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
