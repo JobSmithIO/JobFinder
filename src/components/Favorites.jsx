@@ -33,7 +33,7 @@ const statusOptions = [
 export default function FavoritesPage() {
   const { user } = useContext(UserContext);
   const [favorites, setFavorites] = useState([]);
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [openDropdownId, setOpenDropdownId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 16;
 
@@ -71,6 +71,8 @@ export default function FavoritesPage() {
       // Refresh the favorites list
       const updatedFavorites = await fetchFavorites(user.id);
       setFavorites(updatedFavorites);
+      setOpenDropdownId(null); //optionally close the dropwdown after updating
+      console.log('Current Jobs:', currentJobs);
     } catch (error) {
       console.error('Error updating favorite status:', error);
     }
@@ -103,26 +105,30 @@ export default function FavoritesPage() {
                 <div>
                   <h2
                     className='text-xl font-semibold mb-2 truncate'
-                    title={favorite.title}
+                    title={favorite.job_title}
                   >
-                    {favorite.title}
+                    {favorite.job_title}
                   </h2>
+                  <h3
+                    className='text-l mb-2 truncate'
+                    title={favorite.company_name}
+                  >
+                    {favorite.company_name}
+                  </h3>
                   <div className='relative mb-4'>
                     <button
                       type='button'
                       className='inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500'
                       onClick={() =>
-                        setOpenDropdown(
-                          openDropdown === favorite.title
-                            ? null
-                            : favorite.title
+                        setOpenDropdownId(
+                          openDropdownId === favorite.id ? null : favorite.id
                         )
                       }
                     >
                       {favorite.status || 'Select status'}
                       <ChevronDown className='h-5 w-5' aria-hidden='true' />
                     </button>
-                    {openDropdown === favorite.title && (
+                    {openDropdownId === favorite.id && (
                       <div className='origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10'>
                         <div
                           className='py-1'
