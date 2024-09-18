@@ -17,4 +17,12 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  optimizeDeps: {
+    exclude: ['pg', 'pg-native'],
+  },
+  build: {
+    commonjsOptions: {
+      exclude: ['pg', 'pg-native'],
+    },
+  },
 });

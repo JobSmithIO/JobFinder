@@ -6,6 +6,7 @@ import {
   updateFave,
   deleteFave,
 } from '../tableFunctions/favoritesMethods.js';
+import { createUser, userLogin } from '../tableFunctions/usersMethods.js';
 import { error } from 'console';
 
 const router = express.Router();
@@ -71,6 +72,54 @@ router.delete('/deleteFavorites', async (req, res, next) => {
       log: `Check deleteFavorites middleware for errors: ${error.message}`,
       status: 500,
       message: { err: 'Was not able to delete favorites' },
+    });
+  }
+});
+
+router.post('/login', async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Email and password are required.' });
+    }
+    if (!username.includes('@')) {
+      return res
+        .status(400)
+        .json({ message: 'Please enter a valid email address.' });
+    }
+    const user = await userLogin(username, password);
+    res.json(user);
+  } catch (error) {
+    console.error('Error in /db/login:', error);
+    if (error.message === 'Invalid credentials') {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+    return next({
+      log: `Error in login: ${error.message}`,
+      status: 500,
+      message: { err: 'An error occurred during login.' },
+    });
+  }
+});
+
+router.post('/signup', async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const user = await createUser(username, password);
+    res.json(user);
+  } catch (error) {
+    console.error('Error in /db/signup:', error);
+    if (error.constraint === 'users_username_key') {
+      return res
+        .status(409)
+        .json({ message: 'An account with this email already exists.' });
+    }
+    return next({
+      log: `Error in signup: ${error.message}`,
+      status: 500,
+      message: { err: 'An error occurred during sign up' },
     });
   }
 });

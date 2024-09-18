@@ -1,6 +1,6 @@
 import pkg from 'pg';
 import dotenv from 'dotenv';
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
 const { Pool } = pkg;
 dotenv.config();
@@ -70,26 +70,18 @@ export class userMethods {
         );
       }
     }
-    // Change the query to only fetch by username
-    const checkQuery = 'SELECT * FROM "users" WHERE username = $1';
-    const values = [username];
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const checkQuery =
+      'SELECT * FROM "users" WHERE username = $1 AND password = $2';
+    const values = [username, hashedPassword];
 
     try {
       const result = await pool.query(checkQuery, values);
       if (result.rows.length === 0) {
         throw new Error('Email or password is incorrect');
       }
-      // Compare the submitted password with the stored hash
-      const user = result.rows[0];
-      const passwordMatch = await bcrypt.compare(password, user.password);
-
-      if (!passwordMatch) {
-        throw new Error('Email or password is incorrect');
-      }
-
-      // Don't return the password hash
-      delete user.password;
-      return user;
+      return result.rows[0];
     } catch (err) {
       console.error('Error in userLogin:', err);
       throw err;
@@ -98,3 +90,4 @@ export class userMethods {
 }
 
 export const createUser = userMethods.createUser;
+export const userLogin = userMethods.userLogin;
