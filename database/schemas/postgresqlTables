@@ -13,6 +13,7 @@ CREATE TABLE Favorites (
     user_id INTEGER NOT NULL,
     job_title VARCHAR(255) NOT NULL,
     link TEXT,
+    company_name TEXT,
     status TEXT,
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
