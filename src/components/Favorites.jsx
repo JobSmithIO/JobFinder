@@ -92,11 +92,11 @@ export default function FavoritesPage() {
   return (
     <div className='flex bg-gray-100 min-h-screen'>
       <Sidebar />
-      <div className='container mx-auto p-4 flex flex-col'>
+      <div className='container mx-auto p-1 flex flex-col'>
         <h1 className='text-2xl font-bold mb-6'>Favorites</h1>
 
         <div className='flex-grow'>
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5'>
             {currentJobs.map((favorite) => (
               <div
                 key={crypto.randomUUID()}
