@@ -19,9 +19,9 @@ const SITE_URLS = {
 //     dateRestrict: "w2";
 //   }
 
- const searchJobs = async(searchParams) => {
+ const searchJobs = async(req,res) => {
     try {
-        const {sites, include, exclude, location, dateRestrict} = searchParams;
+        const {sites, include, exclude, location, dateRestrict} = req.body;
 
         let siteSearch = '';
         if (sites && sites.length > 0){
@@ -31,20 +31,22 @@ const SITE_URLS = {
         
 
         let searchQuery = siteSearch;
-        if (include) searchQuery += ` "${include}"`;
-        if (exclude) searchQuery += ` -"${exclude}"`;
-        if(location) searchQuery += `""${location}`;
+        if (include && include.length > 0) {
+          const includeTerms = include.map(term => `"${term}"`).join(' OR ');
+          searchQuery += ` (${includeTerms})`;
+        }
+        if (exclude && exclude.length > 0) searchQuery += ` ${exclude.map(term => `-"${term}"`).join(' ')}`;
+        if (location) searchQuery += ` "${location.trim()}"`;
 
         searchQuery = searchQuery.trim();
-
+console.log(searchQuery)
         const params = {
             key: process.env.GOOGLE_API_KEY,
             cx: process.env.SEARCH_ENGINE_ID,
-            q: searchQuery,
-            num:10,
+            q: siteSearch,
+            num: 10,
         };
         if(dateRestrict) params.dateRestrict = dateRestrict;
-
         const response = await axios.get(BASE_URL, {params});
         const jobs = response.data.items.map(item => ({
             title: item.title,
@@ -54,11 +56,12 @@ const SITE_URLS = {
             displayLink: item.displayLink,
             favorite: 0,
         }))
-        return {
+        console.log(jobs)
+        return res.json({
             jobs,
             totalResults: parseInt(response.data.searchInformation.totalResults),
             searchTime: parseFloat(response.data.searchInformation.searchTime),
-          };
+          });
         } catch (error) {
           console.error('Error in searchJobs:', error);
           throw error;
@@ -73,6 +76,4 @@ const SITE_URLS = {
         return 'Unknown';
       };
       
-
-// Export the extractCompany function if needed elsewhere
-export { searchJobs, extractCompany };
+export { searchJobs };
