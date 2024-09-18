@@ -4,12 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"vite\" \"nodemon server/server.js\"",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-  "start:server": "nodemon server/server.js",
-  "start": "concurrently \"npm run dev\" \"npm run start:server\""
+    "start": "node server/server.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -17,7 +16,6 @@
     "axios": "^1.7.7",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
-    "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "concurrently": "^9.0.1",
@@ -27,7 +25,6 @@
     "framer-motion": "^11.5.4",
     "lucide-react": "^0.441.0",
     "bcrypt": "^5.1.1",
-    "dotenv": "^16.4.5",
     "pg": "^8.12.0",
     "nodemon": "^3.1.5",
     "react": "^18.3.1",

@@ -29,8 +29,11 @@ router.post('/createFavorites', async (req, res, next) => {
 
 //getFaves
 router.get('/getFavorites/:userId', async (req, res, next) => {
+  console.log('GET /getFavorites/:userId route hit');
+  console.log('Received userId:', req.params.userId);
   try {
     const allFaves = await getFaves(req.params.userId);
+    console.log('Retrieved allFaves:', allFaves);
     res.json(allFaves);
   } catch (error) {
     console.error('Error in /db/getFavorites', error);
