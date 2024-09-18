@@ -73,3 +73,8 @@ export class favoritesMethods {
     }
   }
 }
+
+export const createFave = favoritesMethods.createFave;
+export const getFaves = favoritesMethods.getFaves;
+export const updateFave = favoritesMethods.updateFave;
+export const deleteFave = favoritesMethods.deleteFave;
