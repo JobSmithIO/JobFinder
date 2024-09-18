@@ -56,7 +56,9 @@ const SigninForm = () => {
                   Jobsmith!
                 </h1>
                 <div className='mt-11 flex flex-col items-center'>
-                  <button className='w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline'>
+                  <button className='w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline'
+                    onClick={() => (window.location.href = `/api/google`)}
+                  >
                     <div className='bg-white p-2 rounded-full'>
                       <svg className='w-4' viewBox='0 0 533.5 544.3'>
                         <path

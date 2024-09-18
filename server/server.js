@@ -1,5 +1,4 @@
 // server.js
-
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -8,6 +7,8 @@ import favoritesRouter from '../database/routes/favoritesController.js';
 import bcrypt from 'bcrypt';
 import pkg from 'pg';
 import jwt from 'jsonwebtoken';
+import authRoutes from './routes/authRoute.js'
+import passport from './middleware/passport.js';
 
 const { Pool } = pkg;
 
@@ -19,7 +20,7 @@ const PORT = 8080;
 app.use(express.json());
 app.use(cors());
 app.use(express.static('dist'));
-
+app.use(passport.initialize());
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl:
@@ -27,7 +28,7 @@ const pool = new Pool({
       ? { rejectUnauthorized: false }
       : false,
 });
-
+app.use('/api/google',authRoutes)
 app.use('/api', searchJobsRouter);
 app.use('/db', favoritesRouter);
 
