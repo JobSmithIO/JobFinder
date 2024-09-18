@@ -21,8 +21,16 @@
 </p>
 
 ---
-
+Search for Jobs
+---
 <img src="./public/jobsmith1.gif" alt="JobSmith Demo1" width="600"/>
+
+
+---
+Favorite Jobs
+---
+
+<img src="./public/jobsmith2.gif" alt="JobSmith Demo1" width="600"/>
 
 
 ---
