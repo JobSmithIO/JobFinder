@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Sidebar from './SideBar';
 import { useLocation } from 'react-router-dom';
-import { createFave } from '../api/userApi.js';
+import { createFave, deleteFave } from '../api/userApi.js';
 
 export default function JobListings() {
   const location = useLocation();
@@ -18,7 +18,7 @@ export default function JobListings() {
 
   const totalPages = Math.ceil(jobData.length / jobsPerPage);
 
-  const toggleFavorite = async (jobId, jobTitle, jobLink) => {
+  const toggleFavorite = async (jobId, jobTitle, companyName, jobLink) => {
     try {
       setFavorites((prevFaves) => {
         const newFaves = { ...prevFaves };
@@ -31,9 +31,15 @@ export default function JobListings() {
       });
 
       if (!favorites[jobId]) {
-        await createFave(jobTitle, jobLink);
+        const newFavorite = await createFave(jobTitle, jobLink, companyName);
+        // Store the database ID returned from createFave
+        setFavorites((prevFaves) => ({
+          ...prevFaves,
+          [jobId]: newFavorite.id,
+        }));
+      } else {
+        await deleteFave(favorites[jobId]);
       }
-      // TODO: Implement removeFave functionality when it's available
     } catch (error) {
       console.error('Error toggling favorite:', error);
       // Revert the favorite state if the API call fails
@@ -105,7 +111,12 @@ export default function JobListings() {
                       </a>
                       <button
                         onClick={() =>
-                          toggleFavorite(jobId, job.title, job.link)
+                          toggleFavorite(
+                            jobId,
+                            job.title,
+                            job.company,
+                            job.link
+                          )
                         }
                         aria-label={
                           favorites[jobId]

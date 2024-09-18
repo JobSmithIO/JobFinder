@@ -3,12 +3,12 @@ import axios from 'axios';
 const API_URL = '/api'; // This should match the prefix used in your server routes
 
 export class favoritesMethods {
-  static async createFave(jobTitle, link, status = null) {
+  static async createFave(jobTitle, link, companyName, status = null) {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
         `${API_URL}/favorites`,
-        { jobTitle, link, status },
+        { jobTitle, link, companyName, status },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -56,11 +56,13 @@ export class favoritesMethods {
 
   static async deleteFave(faveID) {
     try {
-      const response = await fetch(`${API_URL}/favorites/${faveID}`, {
-        method: 'DELETE',
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`${API_URL}/favorites/${faveID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-      if (!response.ok) throw new Error('Failed to delete favorite');
-      return await response.json();
+      return response.data;
     } catch (err) {
       console.error('Error in deleteFave:', err);
       throw err;

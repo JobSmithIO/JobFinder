@@ -21,7 +21,12 @@ export const loginUser = async (username, password) => {
   }
 };
 
-export const createFave = async (jobTitle, link, status = null) => {
+export const createFave = async (
+  jobTitle,
+  link,
+  companyName,
+  status = null
+) => {
   try {
     const token = localStorage.getItem('token');
     const response = await axios.post(
@@ -29,6 +34,7 @@ export const createFave = async (jobTitle, link, status = null) => {
       {
         jobTitle,
         link,
+        companyName,
         status,
       },
       {
@@ -40,6 +46,21 @@ export const createFave = async (jobTitle, link, status = null) => {
     return response.data;
   } catch (error) {
     console.error('Error creating favorite:', error);
+    throw error.response ? error.response.data : error;
+  }
+};
+
+export const deleteFave = async (id) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.delete(`/api/favorites/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting favorite:', error);
     throw error.response ? error.response.data : error;
   }
 };
