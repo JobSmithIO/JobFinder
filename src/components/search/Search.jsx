@@ -14,16 +14,11 @@ const jobTitles = [
   'Staff Software Engineer'
 ];
 
-
-  
 const Card = ({ children }) => (
   <div className={styles.card}>
     {children}
   </div>
 );
-
-
-
 
 const Dropdown = ({ label, options, onSelect }) => (
   <div className={styles.dropdownContainer}>
@@ -54,22 +49,14 @@ const SelectedItems = ({ items, onRemove }) => (
   </div>
 );
 
-
-
 export default function JobSearchForm() {
   const [selectedJobTitles, setSelectedJobTitles] = useState([]);
   const [selectedWebsites, setSelectedWebsites] = useState([]);
   const [dateFilterUnit, setDateFilterUnit] = useState('days');
   const [dateFilterValue, setDateFilterValue] = useState('7');
-  const navigate = useNavigate();
-
   const [location, setLocation] = useState('');
-  const handleSiteChange = (e) => {
-    const { value, checked } = e.target;
-    setSelectedSites((prev) =>
-      checked ? [...prev, value] : prev.filter((site) => site !== value)
-    );
-  };
+  const [errorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
 
   const handleJobTitleSelect = (title) => {
     if (title && !selectedJobTitles.includes(title)) {
@@ -100,24 +87,25 @@ export default function JobSearchForm() {
       exclude: jobTitles.filter(title => !selectedJobTitles.includes(title)),
       location,
       dateRestrict,
-    
     };
 
     try {
       const response = await axios.post('/api/search-jobs', formData);
-      console.log(response)
-        navigate('/jobs', { state: { jobResults: response.data } });
+      navigate('/jobs', { state: { jobResults: response.data } });
     } catch (error) {
-      console.error('Error submitting form:', error);
+      setErrorMessage('Couldn\'t fetch data based on the current query.');
     }
-    console.log('Form Data:', formData);
   };
-
 
   return (
     <Card>
       <h1 className={styles.cardTitle}>Jobsmith</h1>
       <form onSubmit={handleSubmit}>
+        {errorMessage && ( 
+         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 text-center">
+            {errorMessage}
+          </div>
+        )}
         <Dropdown
           label="Job Titles"
           options={jobTitles}

@@ -22,7 +22,7 @@ const DEFAULT_EXCLUDE_TERMS = [
   '"new college grad"',
 ];
 
-const searchJobs = async (req, res) => {
+const searchJobs = async (req, res, next) => {
   try {
     const { sites, include, exclude, location, dateRestrict } = req.body;
 
@@ -81,8 +81,10 @@ const searchJobs = async (req, res) => {
       searchTime: parseFloat(response.data.searchInformation.searchTime),
     });
   } catch (error) {
-    console.error('Error in searchJobs:', error);
-    throw error;
+    return next({
+      message: "Error in searchJobs: " + error.message,
+      log: error,
+    });
   }
 };
 
